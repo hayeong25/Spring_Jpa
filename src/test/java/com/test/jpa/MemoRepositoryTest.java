@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -71,5 +75,40 @@ public class MemoRepositoryTest {
         memoRepository.deleteById(5L);
 
         System.out.println("Delete Memo : " + memoRepository.findAll());
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("페이징 테스트")
+    public void paging() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Memo> result = memoRepository.findAll(pageable);
+
+        System.out.println("Page : " + result);
+    }
+    
+    @Test
+    @Order(6)
+    @DisplayName("페이징 및 정렬 테스트")
+    public void pagingAndOrdering() {
+        Sort sort1 = Sort.by("mno").descending();
+        Sort sort2 = Sort.by("memo").ascending();
+
+        Sort sortAll = sort1.and(sort2);
+
+        Pageable pageable1 = PageRequest.of(0, 10, sort1);
+        Pageable pageable2 = PageRequest.of(2, 20, sortAll);
+
+        Page<Memo> result1 = memoRepository.findAll(pageable1);
+        Page<Memo> result2 = memoRepository.findAll(pageable2);
+
+        System.out.println("result1 : " + result1);
+
+        result1.get().forEach(System.out::println);
+
+        System.out.println("result2 : " + result2);
+
+        result2.get().forEach(System.out::println);
     }
 }
