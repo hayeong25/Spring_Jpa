@@ -6,10 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Board extends BaseEntity {
@@ -25,4 +27,12 @@ public class Board extends BaseEntity {
 
     @Column(length = 20, nullable = false)
     private String writer;
+
+    public void modifyTitle(String title) {
+        this.title = title;
+    }
+
+    public void modifyContent(String content) {
+        this.content = content;
+    }
 }
